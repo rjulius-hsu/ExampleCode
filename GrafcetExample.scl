@@ -1,0 +1,1805 @@
+﻿FUNCTION_BLOCK "TimeBasedAction"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT 
+      DelayTime : Time;
+      Term : Bool;
+      ResetTime : Time;
+   END_VAR
+
+   VAR_OUTPUT 
+      Q : Bool;
+   END_VAR
+
+   VAR 
+      TON_Timer {OriginalPartName := 'IEC_TIMER'; LibVersion := '1.0'} : TON_TIME;
+      TOF_Timer {OriginalPartName := 'IEC_TIMER'; LibVersion := '1.0'} : TOF_TIME;
+   END_VAR
+
+
+BEGIN
+	
+	#TON_Timer(IN := #Term,
+	           PT := #DelayTime);
+	
+	#TOF_Timer(IN := #TON_Timer.Q,
+	           PT := #ResetTime);
+	
+	#Q := #TOF_Timer.Q OR #TON_Timer.Q;
+	
+END_FUNCTION_BLOCK
+
+FUNCTION_BLOCK "GrafcetExample"
+{ S7_Optimized_Access := 'TRUE' }
+VERSION : 0.1
+   VAR_INPUT 
+      Enable : Bool;
+      Init : Bool;
+      End : Bool;
+   END_VAR
+
+   VAR 
+      StableState : Bool;   // Detect a stable state
+      TranLoops : Int := 0;   // Counter for transitionloops
+      NumTran : Int := 35;
+      T_1 : Bool;
+      T_2 : Bool;
+      T_3 : Bool;
+      T_4 : Bool;
+      TbAct_T_4 : "TimeBasedAction";
+      T_5 : Bool;
+      T_6 : Bool;
+      T_7 : Bool;
+      T_8 : Bool;
+      TbAct_T_8 : "TimeBasedAction";
+      T_9 : Bool;
+      T_10 : Bool;
+      TbAct_T_10 : "TimeBasedAction";
+      T_11 : Bool;
+      TbAct_T_11 : "TimeBasedAction";
+      T_12 : Bool;
+      T_13 : Bool;
+      T_14 : Bool;
+      TbAct_T_14 : "TimeBasedAction";
+      T_15 : Bool;
+      TbAct_T_15 : "TimeBasedAction";
+      T_16 : Bool;
+      T_17 : Bool;
+      TbAct_T_17 : "TimeBasedAction";
+      T_18 : Bool;
+      T_20 : Bool;
+      T_21 : Bool;
+      T_22 : Bool;
+      T_23 : Bool;
+      T_24 : Bool;
+      T_25 : Bool;
+      T_26 : Bool;
+      T_27 : Bool;
+      TbAct_T_27 : "TimeBasedAction";
+      T_28 : Bool;
+      TbAct_T_28 : "TimeBasedAction";
+      T_29 : Bool;
+      TbAct_T_29 : "TimeBasedAction";
+      T_30 : Bool;
+      T_31 : Bool;
+      T_32 : Bool;
+      T_33 : Bool;
+      T_34 : Bool;
+      T_35 : Bool;
+      TbAct_T_35 : "TimeBasedAction";
+      T_36 : Bool;
+      TbAct_T_36 : "TimeBasedAction";
+      Step_1 : Bool;
+      actStep_1 : Bool;
+      deactStep_1 : Bool;
+      MacStep_2 : Bool;
+      actMacStep_2 : Bool;
+      deactMacStep2 : Bool;
+      S_2 : Bool;
+      actS_2 : Bool;
+      deactS_2 : Bool;
+      E_2 : Bool;
+      actE_2 : Bool;
+      deactE_2 : Bool;
+      EnStep_3 : Bool;
+      actEnStep_3 : Bool;
+      deactEnStep_3 : Bool;
+      Step_4 : Bool;
+      actStep_4 : Bool;
+      deactStep_4 : Bool;
+      Step_5 : Bool;
+      actStep_5 : Bool;
+      deactStep_5 : Bool;
+      Step_6 : Bool;
+      actStep_6 : Bool;
+      deactStep_6 : Bool;
+      Step_7 : Bool;
+      actStep_7 : Bool;
+      deactStep_7 : Bool;
+      Step_8 : Bool;
+      actStep_8 : Bool;
+      deactStep_8 : Bool;
+      Step_9 : Bool;
+      actStep_9 : Bool;
+      deactStep_9 : Bool;
+      Step_10 : Bool;
+      actStep_10 : Bool;
+      deactStep_10 : Bool;
+      Step_11 : Bool;
+      actStep_11 : Bool;
+      deactStep_11 : Bool;
+      Step_12 : Bool;
+      actStep_12 : Bool;
+      deactStep_12 : Bool;
+      Step_13 : Bool;
+      actStep_13 : Bool;
+      deactStep_13 : Bool;
+      Step_14 : Bool;
+      actStep_14 : Bool;
+      deactStep_14 : Bool;
+      Step_15 : Bool;
+      actStep_15 : Bool;
+      deactStep_15 : Bool;
+      Step_16 : Bool;
+      actStep_16 : Bool;
+      deactStep_16 : Bool;
+      Step_17 : Bool;
+      actStep_17 : Bool;
+      deactStep_17 : Bool;
+      Step_18 : Bool;
+      actStep_18 : Bool;
+      deactStep_18 : Bool;
+      Step_19 : Bool;
+      actStep_19 : Bool;
+      deactStep_19 : Bool;
+      Step_20 : Bool;
+      actStep_20 : Bool;
+      deactStep_20 : Bool;
+      Step_21 : Bool;
+      actStep_21 : Bool;
+      deactStep_21 : Bool;
+      Step_22 : Bool;
+      actStep_22 : Bool;
+      deactStep_22 : Bool;
+      Step_23 : Bool;
+      actStep_23 : Bool;
+      deactStep_23 : Bool;
+      Step_24 : Bool;
+      actStep_24 : Bool;
+      deactStep_24 : Bool;
+      Step_25 : Bool;
+      actStep_25 : Bool;
+      deactStep_25 : Bool;
+      Step_26 : Bool;
+      actStep_26 : Bool;
+      deactStep_26 : Bool;
+      Step_27 : Bool;
+      actStep_27 : Bool;
+      deactStep_27 : Bool;
+   END_VAR
+
+
+BEGIN
+	(*******************
+	  Control functions
+	********************)
+	(* Init grafcet *)
+	IF #Init THEN
+	  
+	  #Step_1 := TRUE;
+	  #actStep_1 := FALSE;
+	  #deactStep_1 := FALSE;
+	  
+	  #MacStep_2 := FALSE;
+	  #actMacStep_2 := FALSE;
+	  #deactMacStep2 := FALSE;
+	  
+	  #S_2 := FALSE;
+	  #actS_2 := FALSE;
+	  #deactS_2 := FALSE;
+	  
+	  #E_2 := FALSE;
+	  #actE_2 := FALSE;
+	  #deactE_2 := FALSE;
+	  
+	  #EnStep_3 := FALSE;
+	  #actEnStep_3 := FALSE;
+	  #deactEnStep_3 := FALSE;
+	  
+	  #Step_4 := FALSE;
+	  #actStep_4 := FALSE;
+	  #deactStep_4 := FALSE;
+	  
+	  #Step_5 := FALSE;
+	  #actStep_5 := FALSE;
+	  #deactStep_5 := FALSE;
+	  
+	  #Step_6 := FALSE;
+	  #actStep_6 := FALSE;
+	  #deactStep_6 := FALSE;
+	  
+	  #Step_7 := FALSE;
+	  #actStep_7 := FALSE;
+	  #deactStep_7 := FALSE;
+	  
+	  #Step_8 := FALSE;
+	  #actStep_8 := FALSE;
+	  #deactStep_8 := FALSE;
+	  
+	  #Step_9 := FALSE;
+	  #actStep_9 := FALSE;
+	  #deactStep_9 := FALSE;
+	  
+	  #Step_10 := FALSE;
+	  #actStep_10 := FALSE;
+	  #deactStep_10 := FALSE;
+	  
+	  #Step_11 := FALSE;
+	  #actStep_11 := FALSE;
+	  #deactStep_11 := FALSE;
+	  
+	  #Step_12 := FALSE;
+	  #actStep_12 := FALSE;
+	  #deactStep_12 := FALSE;
+	  
+	  #Step_13 := FALSE;
+	  #actStep_13 := FALSE;
+	  #deactStep_13 := FALSE;
+	  
+	  #Step_14 := FALSE;
+	  #actStep_14 := FALSE;
+	  #deactStep_14 := FALSE;
+	  
+	  #Step_15 := FALSE;
+	  #actStep_15 := FALSE;
+	  #deactStep_15 := FALSE;
+	  
+	  #Step_16 := FALSE;
+	  #actStep_16 := FALSE;
+	  #deactStep_16 := FALSE;
+	  
+	  #Step_17 := FALSE;
+	  #actStep_17 := FALSE;
+	  #deactStep_17 := FALSE;
+	  
+	  #Step_18 := FALSE;
+	  #actStep_18 := FALSE;
+	  #deactStep_18 := FALSE;
+	  
+	  #Step_19 := FALSE;
+	  #actStep_19 := FALSE;
+	  #deactStep_19 := FALSE;
+	  
+	  #Step_20 := FALSE;
+	  #actStep_20 := FALSE;
+	  #deactStep_20 := FALSE;
+	  
+	  #Step_21 := FALSE;
+	  #actStep_21 := FALSE;
+	  #deactStep_21 := FALSE;
+	  
+	  #Step_22 := FALSE;
+	  #actStep_22 := FALSE;
+	  #deactStep_22 := FALSE;
+	  
+	  #Step_23 := FALSE;
+	  #actStep_23 := FALSE;
+	  #deactStep_23 := FALSE;
+	  
+	  #Step_24 := FALSE;
+	  #actStep_24 := FALSE;
+	  #deactStep_24 := FALSE;
+	  
+	  #Step_25 := FALSE;
+	  #actStep_25 := FALSE;
+	  #deactStep_25 := FALSE;
+	  
+	  #Step_26 := FALSE;
+	  #actStep_26 := FALSE;
+	  #deactStep_26 := FALSE;
+	  
+	  #Step_27 := FALSE;
+	  #actStep_27 := FALSE;
+	  #deactStep_27 := FALSE;
+	  
+	END_IF;
+	
+	(* end grafcet *)
+	IF #End THEN
+	  
+	  IF #Step_1 THEN
+	    #Step_1 := FALSE;
+	    #actStep_1 := FALSE;
+	    #deactStep_1 := FALSE;
+	  END_IF;
+	  
+	  IF #MacStep_2 THEN
+	    #MacStep_2 := FALSE;
+	    #actMacStep_2 := FALSE;
+	    #deactMacStep2 := FALSE;
+	  END_IF;
+	  
+	  #S_2 := FALSE;
+	  #actS_2 := FALSE;
+	  #deactS_2 := FALSE;
+	  
+	  #E_2 := FALSE;
+	  #actE_2 := FALSE;
+	  #deactE_2 := FALSE;
+	  
+	  IF #EnStep_3 THEN
+	    #EnStep_3 := FALSE;
+	    #actEnStep_3 := FALSE;
+	    #deactEnStep_3 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_4 THEN
+	    #Step_4 := FALSE;
+	    #actStep_4 := FALSE;
+	    #deactStep_4 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_5 THEN
+	    #Step_5 := FALSE;
+	    #actStep_5 := FALSE;
+	    #deactStep_5 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_6 THEN
+	    #Step_6 := FALSE;
+	    #actStep_6 := FALSE;
+	    #deactStep_6 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_7 THEN
+	    #Step_7 := FALSE;
+	    #actStep_7 := FALSE;
+	    #deactStep_7 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_8 THEN
+	    #Step_8 := FALSE;
+	    #actStep_8 := FALSE;
+	    #deactStep_8 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_9 THEN
+	    #Step_9 := FALSE;
+	    #actStep_9 := FALSE;
+	    #deactStep_9 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_10 THEN
+	    #Step_10 := FALSE;
+	    #actStep_10 := FALSE;
+	    #deactStep_10 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_11 THEN
+	    #Step_11 := FALSE;
+	    #actStep_11 := FALSE;
+	    #deactStep_11 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_12 THEN
+	    #Step_12 := FALSE;
+	    #actStep_12 := FALSE;
+	    #deactStep_12 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_13 THEN
+	    #Step_13 := FALSE;
+	    #actStep_13 := FALSE;
+	    #deactStep_13 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_14 THEN
+	    #Step_14 := FALSE;
+	    #actStep_14 := FALSE;
+	    #deactStep_14 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_15 THEN
+	    #Step_15 := FALSE;
+	    #actStep_15 := FALSE;
+	    #deactStep_15 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_16 THEN
+	    #Step_16 := FALSE;
+	    #actStep_16 := FALSE;
+	    #deactStep_16 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_17 THEN
+	    #Step_17 := FALSE;
+	    #actStep_17 := FALSE;
+	    #deactStep_17 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_18 THEN
+	    #Step_18 := FALSE;
+	    #actStep_18 := FALSE;
+	    #deactStep_18 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_19 THEN
+	    #Step_19 := FALSE;
+	    #actStep_19 := FALSE;
+	    #deactStep_19 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_20 THEN
+	    #Step_20 := FALSE;
+	    #actStep_20 := FALSE;
+	    #deactStep_20 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_21 THEN
+	    #Step_21 := FALSE;
+	    #actStep_21 := FALSE;
+	    #deactStep_21 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_22 THEN
+	    #Step_22 := FALSE;
+	    #actStep_22 := FALSE;
+	    #deactStep_22 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_23 THEN
+	    #Step_23 := FALSE;
+	    #actStep_23 := FALSE;
+	    #deactStep_23 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_24 THEN
+	    #Step_24 := FALSE;
+	    #actStep_24 := FALSE;
+	    #deactStep_24 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_25 THEN
+	    #Step_25 := FALSE;
+	    #actStep_25 := FALSE;
+	    #deactStep_25 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_26 THEN
+	    #Step_26 := FALSE;
+	    #actStep_26 := FALSE;
+	    #deactStep_26 := FALSE;
+	  END_IF;
+	  
+	  IF #Step_27 THEN
+	    #Step_27 := FALSE;
+	    #actStep_27 := FALSE;
+	    #deactStep_27 := FALSE;
+	  END_IF;
+	  
+	END_IF;
+	
+	(****************
+	Program
+	*****************)
+	IF #Enable THEN
+	(*****************
+	Transitions
+	******************)
+	  #TranLoops := 0;
+	  #StableState := true;
+	  WHILE #StableState AND #TranLoops < #NumTran DO
+	    #StableState := false;
+	    #TranLoops := #TranLoops + 1;
+	    IF NOT #Init AND NOT #End THEN
+	    (* Enable Transitions *)
+	      #T_1 := #Step_1;
+	      #T_2 := #MacStep_2 AND #S_2;
+	      #T_3 := #Step_4;
+	      #T_4 := #Step_5;
+	      #T_5 := #E_2 AND #MacStep_2;
+	      #T_6 := #Step_11 AND #MacStep_2;
+	      #T_7 := #Step_11 AND #MacStep_2;
+	      #T_8 := #Step_12 AND #MacStep_2;
+	      #T_9 := #Step_13 AND #MacStep_2;
+	      #T_10 := #Step_13 AND #MacStep_2;
+	      #T_11 := #Step_14 AND #MacStep_2;
+	      #T_12 := #Step_15 AND #MacStep_2;
+	      #T_13 := #Step_16 AND NOT #Step_5 AND NOT #Step_8 AND #EnStep_3;
+	      #T_14 := #Step_17 AND NOT #Step_5 AND NOT #Step_8 AND #EnStep_3;
+	      #T_15 := #Step_18 AND NOT #Step_5 AND NOT #Step_8 AND #EnStep_3;
+	      #T_16 := #Step_19 AND NOT #Step_5 AND NOT #Step_8 AND #EnStep_3;
+	      #T_17 := #Step_20 AND NOT #Step_5 AND NOT #Step_8 AND #EnStep_3;
+	      #T_18 := #EnStep_3;
+	      #T_20 := #Step_4;
+	      #T_21 := #Step_5;
+	      #T_22 := #Step_7;
+	      #T_23 := #Step_8;
+	      #T_24 := #Step_8;
+	      #T_25 := #Step_7;
+	      #T_26 := #Step_6 AND #Step_9 AND #Step_10;
+	      #T_27 := #Step_21 AND NOT #Step_5 AND NOT #Step_8 AND #EnStep_3;
+	      #T_28 := #Step_22 AND NOT #Step_5 AND NOT #Step_8 AND #EnStep_3;
+	      #T_29 := #Step_23 AND NOT #Step_5 AND NOT #Step_8 AND #EnStep_3;
+	      #T_30 := #Step_24 AND NOT #Step_5 AND NOT #Step_8 AND #EnStep_3;
+	      #T_31 := #Step_25 AND NOT #Step_5 AND NOT #Step_8 AND #EnStep_3;
+	      #T_32 := #Step_25 AND NOT #Step_5 AND NOT #Step_8 AND #EnStep_3;
+	      #T_33 := #Step_26 AND NOT #Step_5 AND NOT #Step_8 AND #EnStep_3;
+	      #T_34 := #Step_26 AND NOT #Step_5 AND NOT #Step_8 AND #EnStep_3;
+	      #T_35 := #Step_27 AND NOT #Step_5 AND NOT #Step_8 AND #EnStep_3;
+	      #T_36 := #Step_21 AND NOT #Step_5 AND NOT #Step_8 AND #EnStep_3;
+	      
+	      (* T_1 *)
+	      IF (xS1) AND #T_1 THEN
+	        #StableState := TRUE;
+	        #Step_1 := FALSE;
+	        #actStep_1 := FALSE;
+	        #deactStep_1 := TRUE;
+	        
+	        #MacStep_2 := TRUE;
+	        #actMacStep_2 := TRUE;
+	        #deactMacStep2 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_2 *)
+	      IF (true) AND #T_2 THEN
+	        #StableState := TRUE;
+	        #MacStep_2 := FALSE;
+	        #actMacStep_2 := FALSE;
+	        #deactMacStep2 := TRUE;
+	        
+	        #EnStep_3 := TRUE;
+	        #actEnStep_3 := TRUE;
+	        #deactEnStep_3 := FALSE;
+	        
+	        #Step_4 := TRUE;
+	        #actStep_4 := TRUE;
+	        #deactStep_4 := FALSE;
+	        
+	        #Step_7 := TRUE;
+	        #actStep_7 := TRUE;
+	        #deactStep_7 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_3 *)
+	      IF ((xB2) OR (NOT x1B2)) AND #T_3 THEN
+	        #StableState := TRUE;
+	        #Step_4 := FALSE;
+	        #actStep_4 := FALSE;
+	        #deactStep_4 := TRUE;
+	        
+	        #Step_5 := TRUE;
+	        #actStep_5 := TRUE;
+	        #deactStep_5 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_4 *)
+	      #TbAct_T_4(DelayTime := t#2s,
+	                 Term := (NOT xB2) AND (x1B2),
+	                 ResetTime := t#0s);
+	      IF (#TbAct_T_4.Q) AND #T_4 THEN
+	        #StableState := TRUE;
+	        #Step_5 := FALSE;
+	        #actStep_5 := FALSE;
+	        #deactStep_5 := TRUE;
+	        
+	        #Step_4 := TRUE;
+	        #actStep_4 := TRUE;
+	        #deactStep_4 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_5 *)
+	      IF (true) AND #T_5 THEN
+	        #StableState := TRUE;
+	        #E_2 := FALSE;
+	        #actE_2 := FALSE;
+	        #deactE_2 := TRUE;
+	        
+	        #Step_11 := TRUE;
+	        #actStep_11 := TRUE;
+	        #deactStep_11 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_6 *)
+	      IF ((NOT xB4) AND x1B2) AND #T_6 THEN
+	        #StableState := TRUE;
+	        #Step_11 := FALSE;
+	        #actStep_11 := FALSE;
+	        #deactStep_11 := TRUE;
+	        
+	        #Step_13 := TRUE;
+	        #actStep_13 := TRUE;
+	        #deactStep_13 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_7 *)
+	      IF (((NOT x1B2) AND (NOT x1B1)) OR (x1B1)) AND #T_7 THEN
+	        #StableState := TRUE;
+	        #Step_11 := FALSE;
+	        #actStep_11 := FALSE;
+	        #deactStep_11 := TRUE;
+	        
+	        #Step_12 := TRUE;
+	        #actStep_12 := TRUE;
+	        #deactStep_12 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_8 *)
+	      #TbAct_T_8(DelayTime := t#500ms,
+	                 Term := x1B2,
+	                 ResetTime := t#0ms);
+	      IF (#TbAct_T_8.Q) AND #T_8 THEN
+	        #StableState := TRUE;
+	        #Step_12 := FALSE;
+	        #actStep_12 := FALSE;
+	        #deactStep_12 := TRUE;
+	        
+	        #Step_13 := TRUE;
+	        #actStep_13 := TRUE;
+	        #deactStep_13 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_9 *)
+	      IF ((xPrevReady) AND (NOT xB2)) AND #T_9 THEN
+	        #StableState := TRUE;
+	        #Step_13 := FALSE;
+	        #actStep_13 := FALSE;
+	        #deactStep_13 := TRUE;
+	        
+	        #S_2 := TRUE;
+	        #actS_2 := TRUE;
+	        #deactS_2 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_10 *)
+	      #TbAct_T_10(DelayTime := t#1s,
+	                  Term := xB2 AND (NOT xB4),
+	                  ResetTime := t#0s);
+	      IF (#TbAct_T_10.Q) AND #T_10 THEN
+	        #StableState := TRUE;
+	        #Step_13 := FALSE;
+	        #actStep_13 := FALSE;
+	        #deactStep_13 := TRUE;
+	        
+	        #Step_14 := TRUE;
+	        #actStep_14 := TRUE;
+	        #deactStep_14 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_11 *)
+	      #TbAct_T_11(DelayTime := t#1s,
+	                  Term := NOT x2B1,
+	                  ResetTime := t#0s);
+	      IF (#TbAct_T_11.Q) AND #T_11 THEN
+	        #StableState := TRUE;
+	        #Step_14 := FALSE;
+	        #actStep_14 := FALSE;
+	        #deactStep_14 := TRUE;
+	        
+	        #Step_15 := TRUE;
+	        #actStep_15 := TRUE;
+	        #deactStep_15 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_12 *)
+	      IF (x2B1) AND #T_12 THEN
+	        #StableState := TRUE;
+	        #Step_15 := FALSE;
+	        #actStep_15 := FALSE;
+	        #deactStep_15 := TRUE;
+	        
+	        #Step_13 := TRUE;
+	        #actStep_13 := TRUE;
+	        #deactStep_13 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_13 *)
+	      IF (xB2 AND (xPrevReady)) AND #T_13 THEN
+	        #StableState := TRUE;
+	        #Step_16 := FALSE;
+	        #actStep_16 := FALSE;
+	        #deactStep_16 := TRUE;
+	        
+	        #Step_17 := TRUE;
+	        #actStep_17 := TRUE;
+	        #deactStep_17 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_14 *)
+	      #TbAct_T_14(DelayTime := t#500ms,
+	                  Term := x1B1,
+	                  ResetTime := t#0ms);
+	      IF (#TbAct_T_14.Q) AND #T_14 THEN
+	        #StableState := TRUE;
+	        #Step_17 := FALSE;
+	        #actStep_17 := FALSE;
+	        #deactStep_17 := TRUE;
+	        
+	        #Step_21 := TRUE;
+	        #actStep_21 := TRUE;
+	        #deactStep_21 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_15 *)
+	      #TbAct_T_15(DelayTime := t#1s,
+	                  Term := NOT x2B1,
+	                  ResetTime := t#0s);
+	      IF (#TbAct_T_15.Q) AND #T_15 THEN
+	        #StableState := TRUE;
+	        #Step_18 := FALSE;
+	        #actStep_18 := FALSE;
+	        #deactStep_18 := TRUE;
+	        
+	        #Step_19 := TRUE;
+	        #actStep_19 := TRUE;
+	        #deactStep_19 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_16 *)
+	      IF (x2B1) AND #T_16 THEN
+	        #StableState := TRUE;
+	        #Step_19 := FALSE;
+	        #actStep_19 := FALSE;
+	        #deactStep_19 := TRUE;
+	        
+	        #Step_20 := TRUE;
+	        #actStep_20 := TRUE;
+	        #deactStep_20 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_17 *)
+	      #TbAct_T_17(DelayTime := t#500ms,
+	                  Term := x1B2,
+	                  ResetTime := t#0ms);
+	      IF (#TbAct_T_17.Q) AND #T_17 THEN
+	        #StableState := TRUE;
+	        #Step_20 := FALSE;
+	        #actStep_20 := FALSE;
+	        #deactStep_20 := TRUE;
+	        
+	        #Step_16 := TRUE;
+	        #actStep_16 := TRUE;
+	        #deactStep_16 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_18 *)
+	      IF (xS4) AND #T_18 THEN
+	        #StableState := TRUE;
+	        #EnStep_3 := FALSE;
+	        #actEnStep_3 := FALSE;
+	        #deactEnStep_3 := TRUE;
+	        
+	        #Step_6 := TRUE;
+	        #actStep_6 := TRUE;
+	        #deactStep_6 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_20 *)
+	      IF (xS4) AND #T_20 THEN
+	        #StableState := TRUE;
+	        #Step_4 := FALSE;
+	        #actStep_4 := FALSE;
+	        #deactStep_4 := TRUE;
+	        
+	        #Step_9 := TRUE;
+	        #actStep_9 := TRUE;
+	        #deactStep_9 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_21 *)
+	      IF (xS4) AND #T_21 THEN
+	        #StableState := TRUE;
+	        #Step_5 := FALSE;
+	        #actStep_5 := FALSE;
+	        #deactStep_5 := TRUE;
+	        
+	        #Step_9 := TRUE;
+	        #actStep_9 := TRUE;
+	        #deactStep_9 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_22 *)
+	      IF (NOT xS2) AND #T_22 THEN
+	        #StableState := TRUE;
+	        #Step_7 := FALSE;
+	        #actStep_7 := FALSE;
+	        #deactStep_7 := TRUE;
+	        
+	        #Step_8 := TRUE;
+	        #actStep_8 := TRUE;
+	        #deactStep_8 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_23 *)
+	      IF (xS1) AND #T_23 THEN
+	        #StableState := TRUE;
+	        #Step_8 := FALSE;
+	        #actStep_8 := FALSE;
+	        #deactStep_8 := TRUE;
+	        
+	        #Step_7 := TRUE;
+	        #actStep_7 := TRUE;
+	        #deactStep_7 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_24 *)
+	      IF (xS4) AND #T_24 THEN
+	        #StableState := TRUE;
+	        #Step_8 := FALSE;
+	        #actStep_8 := FALSE;
+	        #deactStep_8 := TRUE;
+	        
+	        #Step_10 := TRUE;
+	        #actStep_10 := TRUE;
+	        #deactStep_10 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_25 *)
+	      IF (xS4) AND #T_25 THEN
+	        #StableState := TRUE;
+	        #Step_7 := FALSE;
+	        #actStep_7 := FALSE;
+	        #deactStep_7 := TRUE;
+	        
+	        #Step_10 := TRUE;
+	        #actStep_10 := TRUE;
+	        #deactStep_10 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_26 *)
+	      IF (true) AND #T_26 THEN
+	        #StableState := TRUE;
+	        #Step_6 := FALSE;
+	        #actStep_6 := FALSE;
+	        #deactStep_6 := TRUE;
+	        
+	        #Step_9 := FALSE;
+	        #actStep_9 := FALSE;
+	        #deactStep_9 := TRUE;
+	        
+	        #Step_10 := FALSE;
+	        #actStep_10 := FALSE;
+	        #deactStep_10 := TRUE;
+	        
+	        #Step_1 := TRUE;
+	        #actStep_1 := TRUE;
+	        #deactStep_1 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_27 *)
+	      #TbAct_T_27(DelayTime := t#500ms,
+	                  Term := NOT xCOMP,
+	                  ResetTime := t#0ms);
+	      IF (#TbAct_T_27.Q) AND #T_27 THEN
+	        #StableState := TRUE;
+	        #Step_21 := FALSE;
+	        #actStep_21 := FALSE;
+	        #deactStep_21 := TRUE;
+	        
+	        #Step_22 := TRUE;
+	        #actStep_22 := TRUE;
+	        #deactStep_22 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_28 *)
+	      #TbAct_T_28(DelayTime := t#500ms,
+	                  Term := x1B2,
+	                  ResetTime := t#0ms);
+	      IF (#TbAct_T_28.Q) AND #T_28 THEN
+	        #StableState := TRUE;
+	        #Step_22 := FALSE;
+	        #actStep_22 := FALSE;
+	        #deactStep_22 := TRUE;
+	        
+	        #Step_23 := TRUE;
+	        #actStep_23 := TRUE;
+	        #deactStep_23 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_29 *)
+	      #TbAct_T_29(DelayTime := t#1s,
+	                  Term := NOT x2B1,
+	                  ResetTime := t#0s);
+	      IF (#TbAct_T_29.Q) AND #T_29 THEN
+	        #StableState := TRUE;
+	        #Step_23 := FALSE;
+	        #actStep_23 := FALSE;
+	        #deactStep_23 := TRUE;
+	        
+	        #Step_24 := TRUE;
+	        #actStep_24 := TRUE;
+	        #deactStep_24 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_30 *)
+	      IF (x2B1) AND #T_30 THEN
+	        #StableState := TRUE;
+	        #Step_24 := FALSE;
+	        #actStep_24 := FALSE;
+	        #deactStep_24 := TRUE;
+	        
+	        #Step_16 := TRUE;
+	        #actStep_16 := TRUE;
+	        #deactStep_16 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_31 *)
+	      IF (NOT xB2) AND #T_31 THEN
+	        #StableState := TRUE;
+	        #Step_25 := FALSE;
+	        #actStep_25 := FALSE;
+	        #deactStep_25 := TRUE;
+	        
+	        #Step_26 := TRUE;
+	        #actStep_26 := TRUE;
+	        #deactStep_26 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_32 *)
+	      IF (xB2) AND #T_32 THEN
+	        #StableState := TRUE;
+	        #Step_25 := FALSE;
+	        #actStep_25 := FALSE;
+	        #deactStep_25 := TRUE;
+	        
+	        #Step_16 := TRUE;
+	        #actStep_16 := TRUE;
+	        #deactStep_16 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_33 *)
+	      IF (x1B2) AND #T_33 THEN
+	        #StableState := TRUE;
+	        #Step_26 := FALSE;
+	        #actStep_26 := FALSE;
+	        #deactStep_26 := TRUE;
+	        
+	        #Step_16 := TRUE;
+	        #actStep_16 := TRUE;
+	        #deactStep_16 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_34 *)
+	      IF (NOT x1B2) AND #T_34 THEN
+	        #StableState := TRUE;
+	        #Step_26 := FALSE;
+	        #actStep_26 := FALSE;
+	        #deactStep_26 := TRUE;
+	        
+	        #Step_27 := TRUE;
+	        #actStep_27 := TRUE;
+	        #deactStep_27 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_35 *)
+	      #TbAct_T_35(DelayTime := t#500ms,
+	                  Term := x1B2,
+	                  ResetTime := t#0ms);
+	      IF (#TbAct_T_35.Q) AND #T_35 THEN
+	        #StableState := TRUE;
+	        #Step_27 := FALSE;
+	        #actStep_27 := FALSE;
+	        #deactStep_27 := TRUE;
+	        
+	        #Step_16 := TRUE;
+	        #actStep_16 := TRUE;
+	        #deactStep_16 := FALSE;
+	        
+	      END_IF;
+	      
+	      (* T_36 *)
+	      #TbAct_T_36(DelayTime := t#500ms,
+	                  Term := xCOMP,
+	                  ResetTime := t#0ms);
+	      IF (#TbAct_T_36.Q) AND #T_36 THEN
+	        #StableState := TRUE;
+	        #Step_21 := FALSE;
+	        #actStep_21 := FALSE;
+	        #deactStep_21 := TRUE;
+	        
+	        #Step_18 := TRUE;
+	        #actStep_18 := TRUE;
+	        #deactStep_18 := FALSE;
+	        
+	      END_IF;
+	      
+	      
+	    END_IF;
+	    
+	    
+	    (* Step1 *)
+	    (* activation *)
+	    IF #actStep_1 THEN
+	      #actStep_1 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_1 THEN
+	      ;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step1 *)
+	    IF #deactStep_1 THEN
+	      #deactStep_1 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Macrostep2 *)
+	    (* activation *)
+	    IF #actMacStep_2 THEN
+	      #actMacStep_2 := FALSE;
+	      #E_2 := TRUE;
+	      #actE_2 := TRUE;
+	    END_IF;
+	    (* continuous *)
+	    IF #MacStep_2 THEN
+	      ;
+	    END_IF;
+	    (* deactivation *)
+	    (* Macrostep2 *)
+	    IF #deactMacStep2 THEN
+	      #deactMacStep2 := FALSE;
+	      IF #E_2 THEN
+	        #E_2 := FALSE;
+	        #deactE_2 := TRUE;
+	      END_IF;
+	      IF #S_2 THEN
+	        #S_2 := FALSE;
+	        #deactS_2 := TRUE;
+	      END_IF;
+	      IF #Step_11 THEN
+	        #deactStep_11 := TRUE;
+	        #actStep_11 := FALSE;
+	        #Step_11 := FALSE;
+	      END_IF;
+	      IF #Step_12 THEN
+	        #deactStep_12 := TRUE;
+	        #actStep_12 := FALSE;
+	        #Step_12 := FALSE;
+	      END_IF;
+	      IF #Step_13 THEN
+	        #deactStep_13 := TRUE;
+	        #actStep_13 := FALSE;
+	        #Step_13 := FALSE;
+	      END_IF;
+	      IF #Step_14 THEN
+	        #deactStep_14 := TRUE;
+	        #actStep_14 := FALSE;
+	        #Step_14 := FALSE;
+	      END_IF;
+	      IF #Step_15 THEN
+	        #deactStep_15 := TRUE;
+	        #actStep_15 := FALSE;
+	        #Step_15 := FALSE;
+	      END_IF;
+	    END_IF;
+	    
+	    
+	    (* Exitstep2 *)
+	    (* activation *)
+	    IF #actS_2 THEN
+	      #actS_2 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #S_2 THEN
+	      ;
+	    END_IF;
+	    (* deactivation *)
+	    (* Exitstep2 *)
+	    IF #deactS_2 THEN
+	      #deactS_2 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Entrystep2 *)
+	    (* activation *)
+	    IF #actE_2 THEN
+	      #actE_2 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #E_2 THEN
+	      ;
+	    END_IF;
+	    (* deactivation *)
+	    (* Entrystep2 *)
+	    IF #deactE_2 THEN
+	      #deactE_2 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* enclosing Step3 *)
+	    (* activation *)
+	    IF #actEnStep_3 THEN
+	      #actEnStep_3 := FALSE;
+	      #Step_16 := TRUE;
+	      #actStep_16 := TRUE;
+	    END_IF;
+	    (* continuous *)
+	    IF #EnStep_3 THEN
+	      ;
+	    END_IF;
+	    (* deactivation *)
+	    (* enclosing Step3 *)
+	    IF #deactEnStep_3 THEN
+	      #deactEnStep_3 := FALSE;
+	      
+	      (* end step16 *)
+	      IF #Step_16 THEN
+	        #Step_16 := FALSE;
+	        #actStep_16 := FALSE;
+	        #deactStep_16 := TRUE;
+	      END_IF;
+	      
+	      (* end step17 *)
+	      IF #Step_17 THEN
+	        #Step_17 := FALSE;
+	        #actStep_17 := FALSE;
+	        #deactStep_17 := TRUE;
+	        x1M2 := FALSE;
+	      END_IF;
+	      
+	      (* end step18 *)
+	      IF #Step_18 THEN
+	        #Step_18 := FALSE;
+	        #actStep_18 := FALSE;
+	        #deactStep_18 := TRUE;
+	        x2M1 := FALSE;
+	      END_IF;
+	      
+	      (* end step19 *)
+	      IF #Step_19 THEN
+	        #Step_19 := FALSE;
+	        #actStep_19 := FALSE;
+	        #deactStep_19 := TRUE;
+	        x3M1 := FALSE;
+	      END_IF;
+	      
+	      (* end step20 *)
+	      IF #Step_20 THEN
+	        #Step_20 := FALSE;
+	        #actStep_20 := FALSE;
+	        #deactStep_20 := TRUE;
+	        x1M1 := FALSE;
+	        x3M1 := FALSE;
+	      END_IF;
+	      
+	      (* end step21 *)
+	      IF #Step_21 THEN
+	        #Step_21 := FALSE;
+	        #actStep_21 := FALSE;
+	        #deactStep_21 := TRUE;
+	      END_IF;
+	      
+	      (* end step22 *)
+	      IF #Step_22 THEN
+	        #Step_22 := FALSE;
+	        #actStep_22 := FALSE;
+	        #deactStep_22 := TRUE;
+	        x1M1 := FALSE;
+	      END_IF;
+	      
+	      (* end step23 *)
+	      IF #Step_23 THEN
+	        #Step_23 := FALSE;
+	        #actStep_23 := FALSE;
+	        #deactStep_23 := TRUE;
+	        x2M1 := FALSE;
+	      END_IF;
+	      
+	      (* end step24 *)
+	      IF #Step_24 THEN
+	        #Step_24 := FALSE;
+	        #actStep_24 := FALSE;
+	        #deactStep_24 := TRUE;
+	      END_IF;
+	      
+	      (* end step25 *)
+	      IF #Step_25 THEN
+	        #Step_25 := FALSE;
+	        #actStep_25 := FALSE;
+	        #deactStep_25 := TRUE;
+	      END_IF;
+	      
+	      (* end step26 *)
+	      IF #Step_26 THEN
+	        #Step_26 := FALSE;
+	        #actStep_26 := FALSE;
+	        #deactStep_26 := TRUE;
+	      END_IF;
+	      
+	      (* end step27 *)
+	      IF #Step_27 THEN
+	        #Step_27 := FALSE;
+	        #actStep_27 := FALSE;
+	        #deactStep_27 := TRUE;
+	        x1M1 := FALSE;
+	      END_IF;
+	    END_IF;
+	    
+	    
+	    (* Step4 *)
+	    (* activation *)
+	    IF #actStep_4 THEN
+	      #actStep_4 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_4 THEN
+	      ;
+	      xIP_N_FO := TRUE;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step4 *)
+	    IF #deactStep_4 THEN
+	      #deactStep_4 := FALSE;
+	      xIP_N_FO := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step5 *)
+	    (* activation *)
+	    IF #actStep_5 THEN
+	      #actStep_5 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_5 THEN
+	      ;
+	      
+	      (* Explicit Situation *)
+	      IF #Step_16 THEN
+	        #actStep_16 := FALSE;
+	        #deactStep_16 := TRUE;
+	      ELSE
+	        #actStep_16 := FALSE;
+	        #deactStep_16 := FALSE;
+	      END_IF;
+	      #Step_16 := FALSE;
+	      
+	      (* Explicit Situation *)
+	      IF #Step_17 THEN
+	        #actStep_17 := FALSE;
+	        #deactStep_17 := TRUE;
+	      ELSE
+	        #actStep_17 := FALSE;
+	        #deactStep_17 := FALSE;
+	      END_IF;
+	      #Step_17 := FALSE;
+	      
+	      (* Explicit Situation *)
+	      IF #Step_18 THEN
+	        #actStep_18 := FALSE;
+	        #deactStep_18 := TRUE;
+	      ELSE
+	        #actStep_18 := FALSE;
+	        #deactStep_18 := FALSE;
+	      END_IF;
+	      #Step_18 := FALSE;
+	      
+	      (* Explicit Situation *)
+	      IF #Step_19 THEN
+	        #actStep_19 := FALSE;
+	        #deactStep_19 := TRUE;
+	      ELSE
+	        #actStep_19 := FALSE;
+	        #deactStep_19 := FALSE;
+	      END_IF;
+	      #Step_19 := FALSE;
+	      
+	      (* Explicit Situation *)
+	      IF #Step_20 THEN
+	        #actStep_20 := FALSE;
+	        #deactStep_20 := TRUE;
+	      ELSE
+	        #actStep_20 := FALSE;
+	        #deactStep_20 := FALSE;
+	      END_IF;
+	      #Step_20 := FALSE;
+	      
+	      (* Explicit Situation *)
+	      IF #Step_21 THEN
+	        #actStep_21 := FALSE;
+	        #deactStep_21 := TRUE;
+	      ELSE
+	        #actStep_21 := FALSE;
+	        #deactStep_21 := FALSE;
+	      END_IF;
+	      #Step_21 := FALSE;
+	      
+	      (* Explicit Situation *)
+	      IF #Step_22 THEN
+	        #actStep_22 := FALSE;
+	        #deactStep_22 := TRUE;
+	      ELSE
+	        #actStep_22 := FALSE;
+	        #deactStep_22 := FALSE;
+	      END_IF;
+	      #Step_22 := FALSE;
+	      
+	      (* Explicit Situation *)
+	      IF #Step_23 THEN
+	        #actStep_23 := FALSE;
+	        #deactStep_23 := TRUE;
+	      ELSE
+	        #actStep_23 := FALSE;
+	        #deactStep_23 := FALSE;
+	      END_IF;
+	      #Step_23 := FALSE;
+	      
+	      (* Explicit Situation *)
+	      IF #Step_24 THEN
+	        #actStep_24 := FALSE;
+	        #deactStep_24 := TRUE;
+	      ELSE
+	        #actStep_24 := FALSE;
+	        #deactStep_24 := FALSE;
+	      END_IF;
+	      #Step_24 := FALSE;
+	      
+	      (* Explicit Situation *)
+	      IF #Step_25 THEN
+	        #actStep_25 := FALSE;
+	        #deactStep_25 := FALSE;
+	      ELSE
+	        #actStep_25 := TRUE;
+	        #deactStep_25 := FALSE;
+	      END_IF;
+	      
+	      #Step_25 := TRUE;
+	      
+	      (* Explicit Situation *)
+	      IF #Step_26 THEN
+	        #actStep_26 := FALSE;
+	        #deactStep_26 := TRUE;
+	      ELSE
+	        #actStep_26 := FALSE;
+	        #deactStep_26 := FALSE;
+	      END_IF;
+	      #Step_26 := FALSE;
+	      
+	      (* Explicit Situation *)
+	      IF #Step_27 THEN
+	        #actStep_27 := FALSE;
+	        #deactStep_27 := TRUE;
+	      ELSE
+	        #actStep_27 := FALSE;
+	        #deactStep_27 := FALSE;
+	      END_IF;
+	      #Step_27 := FALSE;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step5 *)
+	    IF #deactStep_5 THEN
+	      #deactStep_5 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step6 *)
+	    (* activation *)
+	    IF #actStep_6 THEN
+	      #actStep_6 := FALSE;
+	      xP4 := FALSE;
+	      xP2 := TRUE;
+	      xP1 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_6 THEN
+	      ;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step6 *)
+	    IF #deactStep_6 THEN
+	      #deactStep_6 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step7 *)
+	    (* activation *)
+	    IF #actStep_7 THEN
+	      #actStep_7 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_7 THEN
+	      ;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step7 *)
+	    IF #deactStep_7 THEN
+	      #deactStep_7 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step8 *)
+	    (* activation *)
+	    IF #actStep_8 THEN
+	      #actStep_8 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_8 THEN
+	      ;
+	      
+	      (* Current Situation *)
+	      (* Current Situation *)
+	      (* Current Situation *)
+	      (* Current Situation *)
+	      (* Current Situation *)
+	      (* Current Situation *)
+	      (* Current Situation *)
+	      (* Current Situation *)
+	      (* Current Situation *)
+	      (* Current Situation *)
+	      (* Current Situation *)
+	      (* Current Situation *)
+	    END_IF;
+	    (* deactivation *)
+	    (* Step8 *)
+	    IF #deactStep_8 THEN
+	      #deactStep_8 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step9 *)
+	    (* activation *)
+	    IF #actStep_9 THEN
+	      #actStep_9 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_9 THEN
+	      ;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step9 *)
+	    IF #deactStep_9 THEN
+	      #deactStep_9 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step10 *)
+	    (* activation *)
+	    IF #actStep_10 THEN
+	      #actStep_10 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_10 THEN
+	      ;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step10 *)
+	    IF #deactStep_10 THEN
+	      #deactStep_10 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step11 *)
+	    (* activation *)
+	    IF #actStep_11 THEN
+	      #actStep_11 := FALSE;
+	      xP1 := TRUE;
+	      xP2 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_11 THEN
+	      ;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step11 *)
+	    IF #deactStep_11 THEN
+	      #deactStep_11 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step12 *)
+	    (* activation *)
+	    IF #actStep_12 THEN
+	      #actStep_12 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_12 THEN
+	      ;
+	      x1M1 := TRUE;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step12 *)
+	    IF #deactStep_12 THEN
+	      #deactStep_12 := FALSE;
+	      x1M1 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step13 *)
+	    (* activation *)
+	    IF #actStep_13 THEN
+	      #actStep_13 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_13 THEN
+	      ;
+	      xIP_N_FO := TRUE;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step13 *)
+	    IF #deactStep_13 THEN
+	      #deactStep_13 := FALSE;
+	      xIP_N_FO := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step14 *)
+	    (* activation *)
+	    IF #actStep_14 THEN
+	      #actStep_14 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_14 THEN
+	      ;
+	      x2M1 := TRUE;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step14 *)
+	    IF #deactStep_14 THEN
+	      #deactStep_14 := FALSE;
+	      x2M1 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step15 *)
+	    (* activation *)
+	    IF #actStep_15 THEN
+	      #actStep_15 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_15 THEN
+	      ;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step15 *)
+	    IF #deactStep_15 THEN
+	      #deactStep_15 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step16 *)
+	    (* activation *)
+	    IF #actStep_16 THEN
+	      #actStep_16 := FALSE;
+	      xP4 := TRUE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_16 THEN
+	      ;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step16 *)
+	    IF #deactStep_16 THEN
+	      #deactStep_16 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step17 *)
+	    (* activation *)
+	    IF #actStep_17 THEN
+	      #actStep_17 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_17 THEN
+	      ;
+	      x1M2 := TRUE;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step17 *)
+	    IF #deactStep_17 THEN
+	      #deactStep_17 := FALSE;
+	      x1M2 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step18 *)
+	    (* activation *)
+	    IF #actStep_18 THEN
+	      #actStep_18 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_18 THEN
+	      ;
+	      x2M1 := TRUE;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step18 *)
+	    IF #deactStep_18 THEN
+	      #deactStep_18 := FALSE;
+	      x2M1 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step19 *)
+	    (* activation *)
+	    IF #actStep_19 THEN
+	      #actStep_19 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_19 THEN
+	      ;
+	      x3M1 := TRUE;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step19 *)
+	    IF #deactStep_19 THEN
+	      #deactStep_19 := FALSE;
+	      x3M1 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step20 *)
+	    (* activation *)
+	    IF #actStep_20 THEN
+	      #actStep_20 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_20 THEN
+	      ;
+	      x1M1 := TRUE;
+	      x3M1 := TRUE;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step20 *)
+	    IF #deactStep_20 THEN
+	      #deactStep_20 := FALSE;
+	      x1M1 := FALSE;
+	      x3M1 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step21 *)
+	    (* activation *)
+	    IF #actStep_21 THEN
+	      #actStep_21 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_21 THEN
+	      ;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step21 *)
+	    IF #deactStep_21 THEN
+	      #deactStep_21 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step22 *)
+	    (* activation *)
+	    IF #actStep_22 THEN
+	      #actStep_22 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_22 THEN
+	      ;
+	      x1M1 := TRUE;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step22 *)
+	    IF #deactStep_22 THEN
+	      #deactStep_22 := FALSE;
+	      x1M1 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step23 *)
+	    (* activation *)
+	    IF #actStep_23 THEN
+	      #actStep_23 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_23 THEN
+	      ;
+	      x2M1 := TRUE;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step23 *)
+	    IF #deactStep_23 THEN
+	      #deactStep_23 := FALSE;
+	      x2M1 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step24 *)
+	    (* activation *)
+	    IF #actStep_24 THEN
+	      #actStep_24 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_24 THEN
+	      ;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step24 *)
+	    IF #deactStep_24 THEN
+	      #deactStep_24 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step25 *)
+	    (* activation *)
+	    IF #actStep_25 THEN
+	      #actStep_25 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_25 THEN
+	      ;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step25 *)
+	    IF #deactStep_25 THEN
+	      #deactStep_25 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step26 *)
+	    (* activation *)
+	    IF #actStep_26 THEN
+	      #actStep_26 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_26 THEN
+	      ;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step26 *)
+	    IF #deactStep_26 THEN
+	      #deactStep_26 := FALSE;
+	    END_IF;
+	    
+	    
+	    (* Step27 *)
+	    (* activation *)
+	    IF #actStep_27 THEN
+	      #actStep_27 := FALSE;
+	    END_IF;
+	    (* continuous *)
+	    IF #Step_27 THEN
+	      ;
+	      x1M1 := TRUE;
+	    END_IF;
+	    (* deactivation *)
+	    (* Step27 *)
+	    IF #deactStep_27 THEN
+	      #deactStep_27 := FALSE;
+	      x1M1 := FALSE;
+	    END_IF;
+	    
+	    
+	    
+	  END_WHILE;
+	END_IF;
+	
+END_FUNCTION_BLOCK
+
